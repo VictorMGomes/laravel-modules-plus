@@ -11,6 +11,7 @@ use Illuminate\Foundation\Events\DiscoverEvents;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use ReflectionClass;
@@ -196,19 +197,25 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
     protected function bootRoutes(): void
     {
         $routesPath = $this->path('Routes');
+
         if (! is_dir($routesPath)) {
             return;
         }
 
         if (file_exists($routesPath.'/web.php')) {
-            $this->loadRoutesFrom($routesPath.'/web.php');
+            Route::middleware('web')
+                ->group($routesPath.'/web.php');
         }
+
         if (file_exists($routesPath.'/api.php')) {
-            $this->loadRoutesFrom($routesPath.'/api.php');
+            Route::middleware('api')
+                ->group($routesPath.'/api.php');
         }
+
         if (file_exists($routesPath.'/console.php')) {
             $this->loadRoutesFrom($routesPath.'/console.php');
         }
+
         if (file_exists($routesPath.'/channels.php')) {
             require $routesPath.'/channels.php';
         }
