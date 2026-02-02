@@ -1,7 +1,7 @@
 {
   "name": "victormgomes/laravel-modules",
   "description": "Laravel modules management",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "keywords": [
     "laravel",
     "modules",

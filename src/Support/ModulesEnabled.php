@@ -57,6 +57,19 @@ class ModulesEnabled
         return $migrations;
     }
 
+    public static function getTenantMigrations(): array
+    {
+        $migrations = [];
+
+        foreach (self::getList() as $moduleName) {
+            $migrations = array_merge($migrations, self::getTenantMigrationsForModule($moduleName));
+        }
+
+        sort($migrations);
+
+        return $migrations;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Internal Helper Methods
@@ -96,6 +109,18 @@ class ModulesEnabled
     {
         $moduleDef = new ModuleDefinition($moduleName);
         $migrationPath = "{$moduleDef->path}/Database/Migrations";
+
+        if (! is_dir($migrationPath)) {
+            return [];
+        }
+
+        return glob($migrationPath.'/*.php') ?: [];
+    }
+
+    protected static function getTenantMigrationsForModule(string $moduleName): array
+    {
+        $moduleDef = new ModuleDefinition($moduleName);
+        $migrationPath = "{$moduleDef->path}/Database/Migrations/Tenant";
 
         if (! is_dir($migrationPath)) {
             return [];
