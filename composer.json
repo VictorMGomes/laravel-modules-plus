@@ -1,7 +1,7 @@
 {
   "name": "victormgomes/laravel-modules",
   "description": "Laravel modules management",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "keywords": [
     "laravel",
     "modules",
@@ -18,7 +18,7 @@
     }
   ],
   "require": {
-    "illuminate/database": "^12.0"
+    "illuminate/database": "^12.0|^13.0"
   },
   "autoload": {
     "psr-4": {
