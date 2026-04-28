@@ -1,10 +1,12 @@
 # Laravel Modules Plus
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/victormgomes/laravel-modules-plus.svg?style=flat-square)](https://packagist.org/packages/victormgomes/laravel-modules-plus)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/victormgomes/laravel-modules-plus/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/victormgomes/laravel-modules-plus/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/victormgomes/laravel-modules-plus/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/victormgomes/laravel-modules-plus/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/victormgomes/laravel-modules-plus.svg?style=flat-square)](https://packagist.org/packages/victormgomes/laravel-modules-plus)
 [![License](https://img.shields.io/packagist/l/victormgomes/laravel-modules-plus.svg?style=flat-square)](https://packagist.org/packages/victormgomes/laravel-modules-plus)
 
-**Advanced infrastructure and zero-config resource discovery addon for `nwidart/laravel-modules`.**
+**Enhancements for the nWidart/laravel-modules package**
 
 ---
 
@@ -12,17 +14,18 @@
 
 **Laravel Modules Plus** is a powerful, zero-configuration addon designed to transform your modules into truly self-contained, portable packages. It automates the "heavy lifting" of resource registration and provides robust environment-level control, ensuring your modular architecture is enterprise-ready.
 
-## Key Features
+### Why use this package?
 
-*   **`.env` Based Activation**: Control enabled modules directly via your environment file (`APP_MODULES_ENABLED`). No more tracking `modules_statuses.json` in version control.
-*   **Abstract Base Provider**: Automatically discovers and registers:
-    *   **Routes**: API, Web, Console, and Broadcast Channels.
-    *   **Auto-Discovery**: Policies, Observers, and Events based on folder naming conventions.
-    *   **Components**: Blade and Livewire components registered automatically.
-    *   **Resources**: Zero-config loading of Views and Translations.
-*   **Smart Multi-Tenancy Migrations**: Intelligent separation of Central vs. Tenant migrations.
-*   **Modern Autoloading**: Built-in stubs optimized for `wikimedia/composer-merge-plugin`.
-*   **Portable Stubs**: Includes internal optimized stubs that ensure architectural consistency without manual setup.
+*   **Zero-Config Discovery**: Automatically discovers and registers routes, policies, observers, and events based on simple folder conventions.
+*   **Environment Control**: Manage module activation via `.env` (`APP_MODULES_ENABLED`), eliminating the need to track `modules_statuses.json` in version control.
+*   **Multi-Tenancy Ready**: Intelligent separation of Central and Tenant migrations for complex application architectures.
+*   **Portability**: Optimized stubs ensure that every new module follows a consistent, decoupled structure from day one.
+
+---
+
+## Support us
+
+We invest a lot of resources into creating [best in class open source packages](https://github.com/victormgomes). You can support us by [sponsoring us on GitHub](https://github.com/sponsors/VictorMGomes).
 
 ---
 
@@ -59,27 +62,13 @@ Modules are managed via your `.env` file. Only modules listed here will be boote
 APP_MODULES_ENABLED=Auth,User,Chat,Billing
 ```
 
-You can also use standard commands which will automatically update your `.env`:
-```bash
-php artisan module:enable Chat
-```
-
 ### 2. Creating New Modules
-When you create a module, it will automatically use the optimized stubs (if published or if `custom_stubs` is enabled in config). 
-
 The generated Service Provider will extend `AbstractModuleServiceProvider`. This parent class handles all registration automatically as long as you follow the standard folder structure:
 
 *   `Routes/api.php`, `Routes/web.php` -> Loaded automatically.
 *   `Policies/` -> `UserPolicy` automatically linked to `Models/User`.
 *   `Observers/` -> `UserObserver` automatically linked to `Models/User`.
-*   `Listeners/` -> Events discovered via `DiscoverEvents`.
 *   `Database/Migrations/Tenant` -> Automatically loaded only for tenant database contexts.
-
-### 3. Modern Autoloading
-To keep modules decoupled, this package assumes each module has its own `composer.json`. After creating a new module, simply run:
-```bash
-composer dump-autoload
-```
 
 ---
 
@@ -89,9 +78,18 @@ composer dump-autoload
 composer test
 ```
 
+## Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
 ## Credits
 
 - [Victor M. Gomes](https://github.com/VictorMGomes)
+- [All Contributors](../../contributors)
 
 ## License
 

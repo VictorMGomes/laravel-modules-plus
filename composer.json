@@ -1,7 +1,7 @@
 {
     "name": "victormgomes/laravel-modules-plus",
-    "version": "0.0.6",
-    "description": "Advanced infrastructure and zero-config resource discovery addon for nwidart/laravel-modules",
+    "version": "0.0.7",
+    "description": "Enhancements for the nWidart/laravel-modules package",
     "keywords": [
         "Victor M. Gomes",
         "laravel",
@@ -9,6 +9,16 @@
     ],
     "homepage": "https://github.com/victormgomes/laravel-modules-plus",
     "license": "MIT",
+    "support": {
+        "issues": "https://github.com/victormgomes/laravel-modules-plus/issues",
+        "source": "https://github.com/victormgomes/laravel-modules-plus"
+    },
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/VictorMGomes"
+        }
+    ],
     "authors": [
         {
             "name": "Victor M. Gomes",
