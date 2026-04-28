@@ -1,7 +1,7 @@
 {
     "name": "victormgomes/laravel-modules-plus",
     "version": "0.0.6",
-    "description": "Core support components for modular Laravel applications",
+    "description": "Advanced infrastructure and zero-config resource discovery addon for nwidart/laravel-modules",
     "keywords": [
         "Victor M. Gomes",
         "laravel",
