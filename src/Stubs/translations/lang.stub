@@ -1,9 +1,0 @@
-<?php
-
-return [
-    'name'   => '{{ module }}',
-    'create' => 'Create {{ module }}',
-    'edit'   => 'Edit {{ module }}',
-    'list'   => '{{ module }} List',
-    'show'   => 'Show {{ module }}',
-];

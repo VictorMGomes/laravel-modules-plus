@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+namespace $NAMESPACE$;
+
+use Victormgomes\ModulesPlus\AbstractModuleServiceProvider;
+
+class $CLASS$ extends AbstractModuleServiceProvider
+{
+    /**
+     * The name of the module.
+     */
+    protected string $moduleName = '$MODULE$';
+}

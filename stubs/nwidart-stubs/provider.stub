@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+namespace $NAMESPACE$;
+
+use Victormgomes\ModulesPlus\AbstractModuleServiceProvider;
+
+class $CLASS$ extends AbstractModuleServiceProvider
+{
+    /**
+     * Register any module services.
+     */
+    public function register(): void
+    {
+        parent::register();
+    }
+
+    /**
+     * Boot any module services.
+     */
+    public function boot(): void
+    {
+        parent::boot();
+    }
+}
