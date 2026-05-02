@@ -19,6 +19,7 @@ use RuntimeException;
 use SplFileInfo;
 use Symfony\Component\Finder\Finder;
 use Throwable;
+use Victormgomes\ModulesPlus\Support\ModularPath;
 
 abstract class AbstractModuleServiceProvider extends ServiceProvider
 {
@@ -97,7 +98,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
 
     protected function discoverPolicies(): void
     {
-        $policiesPath = $this->path('Policies');
+        $policiesPath = $this->path(ModularPath::get('policies'));
 
         if (! is_dir($policiesPath)) {
             return;
@@ -114,7 +115,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
             $modelName = Str::replaceLast('AccessPolicy', '', $modelName);
             $modelName = Str::replaceLast('Policy', '', $modelName);
 
-            $modelClass = "{$this->moduleNamespace}\\Models\\{$modelName}";
+            $modelClass = "{$this->moduleNamespace}\\" . ModularPath::getNamespace('model') . "\\{$modelName}";
 
             if (class_exists($modelClass) && class_exists($policyClass)) {
                 Gate::policy($modelClass, $policyClass);
@@ -124,7 +125,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
 
     protected function discoverEvents(): void
     {
-        $listenersPath = $this->path('Listeners');
+        $listenersPath = $this->path(ModularPath::get('listener'));
 
         if (! is_dir($listenersPath)) {
             return;
@@ -141,7 +142,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
 
     protected function discoverObservers(): void
     {
-        $observersPath = $this->path('Observers');
+        $observersPath = $this->path(ModularPath::get('observer'));
 
         if (! is_dir($observersPath)) {
             return;
@@ -164,7 +165,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
                 }
             }
 
-            $modelClass = "{$this->moduleNamespace}\\Models\\{$modelName}";
+            $modelClass = "{$this->moduleNamespace}\\" . ModularPath::getNamespace('model') . "\\{$modelName}";
 
             if (class_exists($modelClass) && class_exists($observerClass)) {
                 $modelClass::observe($observerClass);
@@ -175,11 +176,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
     protected function bootConfig(): void
     {
         $fileName = strtolower($this->moduleName).'.php';
-        $configPath = $this->path('Config', $fileName);
-
-        if (! file_exists($configPath)) {
-            $configPath = $this->path('config', $fileName);
-        }
+        $configPath = $this->path(ModularPath::get('config'), $fileName);
 
         if (file_exists($configPath)) {
             $this->mergeConfigFrom($configPath, strtolower($this->moduleName));
@@ -188,7 +185,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
 
     protected function bootViews(): void
     {
-        $viewPath = $this->path('Resources', 'views');
+        $viewPath = $this->path(ModularPath::get('views'));
         if (is_dir($viewPath)) {
             $this->loadViewsFrom($viewPath, strtolower($this->moduleName));
         }
@@ -196,7 +193,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
 
     protected function bootTranslations(): void
     {
-        $langPath = $this->path('Resources', 'lang');
+        $langPath = $this->path(ModularPath::get('lang'));
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, strtolower($this->moduleName));
             $this->loadJsonTranslationsFrom($langPath);
@@ -205,7 +202,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
 
     protected function bootMigrations(): void
     {
-        $path = $this->path('Database', 'Migrations');
+        $path = $this->path(ModularPath::get('migration'));
         if (is_dir($path)) {
             // Only load the root of the Migrations directory (Central)
             // and explicitly EXCLUDE the Tenant subfolder if it exists.
@@ -215,7 +212,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
 
     protected function bootRoutes(): void
     {
-        $routesPath = $this->path('Routes');
+        $routesPath = $this->path(ModularPath::get('routes'));
 
         if (! is_dir($routesPath)) {
             return;
@@ -246,7 +243,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
             return;
         }
 
-        $commandsPath = $this->path('Console', 'Commands');
+        $commandsPath = $this->path(ModularPath::get('command'));
         if (! is_dir($commandsPath)) {
             return;
         }
@@ -261,7 +258,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
 
     protected function bootComponents(): void
     {
-        $namespace = "{$this->moduleNamespace}\\View\\Components";
+        $namespace = "{$this->moduleNamespace}\\" . ModularPath::getNamespace('component-class');
         Blade::componentNamespace($namespace, strtolower($this->moduleName));
     }
 
@@ -269,7 +266,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
     {
         $maps = $this->morphMaps;
 
-        $modelClass = "{$this->moduleNamespace}\\Models\\{$this->moduleName}";
+        $modelClass = "{$this->moduleNamespace}\\" . ModularPath::getNamespace('model') . "\\{$this->moduleName}";
         if (class_exists($modelClass)) {
             $maps[strtolower($this->moduleName)] = $modelClass;
         }
@@ -281,7 +278,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
 
     protected function bootAssets(): void
     {
-        $sourcePath = $this->path('Resources', 'assets');
+        $sourcePath = $this->path(ModularPath::get('assets'));
         if (is_dir($sourcePath)) {
             $moduleKey = strtolower($this->moduleName);
             $this->publishes([$sourcePath => public_path("vendor/{$moduleKey}")], ["{$moduleKey}-assets"]);
@@ -303,7 +300,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
             return;
         }
 
-        $livewirePath = $this->path('Livewire');
+        $livewirePath = $this->path(ModularPath::get('livewire'));
         if (! is_dir($livewirePath)) {
             return;
         }

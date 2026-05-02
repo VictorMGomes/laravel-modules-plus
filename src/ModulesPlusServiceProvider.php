@@ -46,7 +46,9 @@ class ModulesPlusServiceProvider extends PackageServiceProvider
                 $module = Str::after($modelName, 'Modules\\');
                 $module = Str::before($module, '\\Models\\');
 
-                return "Modules\\{$module}\\Database\\Factories\\".class_basename($modelName).'Factory';
+                $factoryNamespace = \Victormgomes\ModulesPlus\Support\ModularPath::getNamespace('factory');
+
+                return "Modules\\{$module}\\{$factoryNamespace}\\".class_basename($modelName).'Factory';
             }
 
             return 'Database\\Factories\\'.class_basename($modelName).'Factory';

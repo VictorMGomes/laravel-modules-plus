@@ -7,6 +7,7 @@ namespace Victormgomes\ModulesPlus\Support\Traits;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory as EloquentHasFactory;
 use Illuminate\Support\Str;
+use Victormgomes\ModulesPlus\Support\ModularPath;
 
 trait HasModularFactory
 {
@@ -25,7 +26,9 @@ trait HasModularFactory
             $module = Str::after($modelName, 'Modules\\');
             $module = Str::before($module, '\\Models\\');
 
-            $factoryClass = "Modules\\{$module}\\Database\\Factories\\".class_basename($modelName).'Factory';
+            $factoryNamespace = ModularPath::getNamespace('factory');
+
+            $factoryClass = "Modules\\{$module}\\{$factoryNamespace}\\".class_basename($modelName).'Factory';
 
             if (class_exists($factoryClass)) {
                 return $factoryClass::new();

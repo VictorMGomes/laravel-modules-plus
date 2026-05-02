@@ -21,13 +21,15 @@ class SeederPaths
         $enabledModules = self::getEnabledModules();
 
         foreach ($enabledModules as $moduleName) {
-            $seederPath = $modulesPath . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Seeders' . DIRECTORY_SEPARATOR . $type;
+            $relativeSeederPath = ModularPath::get('seeder');
+            $seederPath = $modulesPath.DIRECTORY_SEPARATOR.$moduleName.DIRECTORY_SEPARATOR.$relativeSeederPath.DIRECTORY_SEPARATOR.$type;
 
             if (File::isDirectory($seederPath)) {
                 $files = File::files($seederPath);
                 foreach ($files as $file) {
                     if ($file->getExtension() === 'php' && str_ends_with($file->getFilename(), 'Seeder.php')) {
-                        $className = "Modules\\{$moduleName}\\Database\\Seeders\\{$type}\\" . $file->getBasename('.php');
+                        $seederNamespace = ModularPath::getNamespace('seeder');
+                        $className = "Modules\\{$moduleName}\\{$seederNamespace}\\{$type}\\".$file->getBasename('.php');
                         if (class_exists($className)) {
                             $seeders[] = $className;
                         }
@@ -42,13 +44,14 @@ class SeederPaths
     protected static function getEnabledModules(): array
     {
         $envPath = base_path('.env');
-        if (!File::exists($envPath)) {
+        if (! File::exists($envPath)) {
             return [];
         }
 
         $content = File::get($envPath);
         if (preg_match('/^APP_MODULES_ENABLED=(.*)$/m', $content, $matches)) {
             $value = trim($matches[1]);
+
             return $value ? array_map('trim', explode(',', $value)) : [];
         }
 

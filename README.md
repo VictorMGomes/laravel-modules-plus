@@ -65,20 +65,20 @@ APP_MODULES_ENABLED=Auth,User,Chat,Billing
 ```
 
 ### 2. Standard Plug-and-Play Structure
-By extending `AbstractModuleServiceProvider`, the following resources are discovered and registered automatically:
+By extending `AbstractModuleServiceProvider`, the following resources are discovered and registered automatically (based on standard `nWidart/laravel-modules` conventions):
 
-*   **Routes**: `Routes/api.php` and `Routes/web.php` are loaded with standard middleware.
-*   **Policies**: `Policies/UserPolicy.php` is automatically linked to `Models/User.php`.
-*   **Observers**: `Observers/UserObserver.php` is automatically linked to `Models/User.php`.
-*   **Factories**: Factories in `Database/Factories/` are automatically resolved for modular models using standard `HasFactory`.
-*   **Migrations**: All migrations in `Database/Migrations/` are loaded by default.
-*   **Seeders**: All seeders in `Database/Seeders/` can be dynamically retrieved for seeding.
+*   **Routes**: `routes/api.php` and `routes/web.php` are loaded with standard middleware.
+*   **Policies**: `app/Policies/UserPolicy.php` is automatically linked to `app/Models/User.php`.
+*   **Observers**: `app/Observers/UserObserver.php` is automatically linked to `app/Models/User.php`.
+*   **Factories**: Factories in `database/factories/` are automatically resolved for modular models using standard `HasFactory`.
+*   **Migrations**: All migrations in `database/migrations/` are loaded by default.
+*   **Seeders**: All seeders in `database/seeders/` can be dynamically retrieved for seeding.
 
 ### 3. Contextual Discovery (Advanced)
 For more complex architectures (like Multi-Tenancy), the package allows you to silo resources into sub-contexts:
 
-*   **Contextual Migrations**: Place migrations in `Database/Migrations/Tenant` to load them only in specific database contexts.
-*   **Contextual Seeders**: Use subfolders like `Database/Seeders/Tenant/` and retrieve them using the `SeederPaths` helper:
+*   **Contextual Migrations**: Place migrations in `database/migrations/Tenant` to load them only in specific database contexts.
+*   **Contextual Seeders**: Use subfolders like `database/seeders/Tenant/` and retrieve them using the `SeederPaths` helper:
 
 ```php
 use Victormgomes\ModulesPlus\Support\SeederPaths;

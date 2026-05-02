@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Victormgomes\ModulesPlus\Support;
 
+use Victormgomes\ModulesPlus\Support\ModularPath;
+
 class MigrationPaths
 {
     /**
@@ -35,7 +37,7 @@ class MigrationPaths
 
             // 2. Modules
             foreach ($enabledModules as $moduleName) {
-                $moduleMigrationPath = $modulesPath.DIRECTORY_SEPARATOR.$moduleName.DIRECTORY_SEPARATOR.'Database'.DIRECTORY_SEPARATOR.'Migrations';
+                $moduleMigrationPath = $modulesPath.DIRECTORY_SEPARATOR.$moduleName.DIRECTORY_SEPARATOR.ModularPath::get('migration');
 
                 if (! is_dir($moduleMigrationPath)) {
                     continue;
@@ -66,7 +68,7 @@ class MigrationPaths
 
             // 2. Modules
             foreach ($enabledModules as $moduleName) {
-                $moduleMigrationPath = $modulesPath.DIRECTORY_SEPARATOR.$moduleName.DIRECTORY_SEPARATOR.'Database'.DIRECTORY_SEPARATOR.'Migrations';
+                $moduleMigrationPath = $modulesPath.DIRECTORY_SEPARATOR.$moduleName.DIRECTORY_SEPARATOR.ModularPath::get('migration');
 
                 if (! is_dir($moduleMigrationPath)) {
                     continue;
