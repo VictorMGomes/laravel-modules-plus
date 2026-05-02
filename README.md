@@ -6,20 +6,22 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/victormgomes/laravel-modules-plus.svg?style=flat-square)](https://packagist.org/packages/victormgomes/laravel-modules-plus)
 [![License](https://img.shields.io/packagist/l/victormgomes/laravel-modules-plus.svg?style=flat-square)](https://packagist.org/packages/victormgomes/laravel-modules-plus)
 
-**Enhancements for the nWidart/laravel-modules package**
+**The Plug-and-Play Engine for Laravel Modules.**
 
 ---
 
 ## Introduction
 
-**Laravel Modules Plus** is a powerful, zero-configuration addon designed to transform your modules into truly self-contained, portable packages. It automates the "heavy lifting" of resource registration and provides robust environment-level control, ensuring your modular architecture is enterprise-ready.
+**Laravel Modules Plus** is a zero-configuration enhancement designed to transform your modules into truly self-contained, autonomous units. By extending the provided `AbstractModuleServiceProvider`, your modules instantly become **Plug-and-Play**: they automatically handle their own resource registration, factory resolution, and data seeding without any manual boilerplate in the main application.
 
 ### Why use this package?
 
-*   **Zero-Config Discovery**: Automatically discovers and registers routes, policies, observers, and events based on simple folder conventions.
-*   **Environment Control**: Manage module activation via `.env` (`APP_MODULES_ENABLED`), eliminating the need to track `modules_statuses.json` in version control.
-*   **Multi-Tenancy Ready**: Intelligent separation of Central and Tenant migrations for complex application architectures.
-*   **Portability**: Optimized stubs ensure that every new module follows a consistent, decoupled structure from day one.
+*   **Module Autonomy**: Modules become self-configuring "mini-packages". Drop a module into any project, and its logic is instantly alive.
+*   **Standardized Structure**: Enforces a clean, consistent convention across all modules, making your codebase predictable and enterprise-ready.
+*   **Zero-Config Discovery**: Automatic registration of Routes, Policies, Observers, and Events based on simple folder conventions.
+*   **Agnostic Factory Resolution**: Automatically resolves Eloquent factories for modular models. Keep your models clean and free of package-specific traits.
+*   **Dynamic Seeding**: Effortlessly manage data population with helpers that discover seeders across your entire modular ecosystem.
+*   **Contextual Flexibility**: Optionally separate resources (Migrations, Seeders) into specific contexts like `Tenant` or `Central` for complex architectures.
 
 ---
 
@@ -56,33 +58,39 @@ php artisan modules-plus:install
 ## Usage
 
 ### 1. Activating Modules
-Modules are managed via your `.env` file. Only modules listed here will be booted:
+Manage module activation directly via your `.env` file, keeping your `modules_statuses.json` out of version control:
 
 ```env
 APP_MODULES_ENABLED=Auth,User,Chat,Billing
 ```
 
-### 2. Creating New Modules
-The generated Service Provider will extend `AbstractModuleServiceProvider`. This parent class provides the **Plug-and-Play** engine that handles all registration automatically as long as you follow the standard folder structure:
+### 2. Standard Plug-and-Play Structure
+By extending `AbstractModuleServiceProvider`, the following resources are discovered and registered automatically:
 
-*   `Routes/api.php`, `Routes/web.php` -> Loaded automatically.
-*   `Policies/` -> `UserPolicy` automatically linked to `Models/User`.
-*   `Observers/` -> `UserObserver` automatically linked to `Models/User`.
-*   `Database/Factories/` -> Automatically resolved for models in the `Models/` namespace.
-*   `Database/Migrations/Tenant` -> Automatically loaded only for tenant database contexts.
-*   `Database/Seeders/Tenant/` -> Can be dynamically loaded using provided helpers.
+*   **Routes**: `Routes/api.php` and `Routes/web.php` are loaded with standard middleware.
+*   **Policies**: `Policies/UserPolicy.php` is automatically linked to `Models/User.php`.
+*   **Observers**: `Observers/UserObserver.php` is automatically linked to `Models/User.php`.
+*   **Factories**: Factories in `Database/Factories/` are automatically resolved for modular models using standard `HasFactory`.
+*   **Migrations**: All migrations in `Database/Migrations/` are loaded by default.
+*   **Seeders**: All seeders in `Database/Seeders/` can be dynamically retrieved for seeding.
 
-### 3. Modular Seeding
-The package provides helpers to easily run seeders that are siloed within module subfolders, which is especially useful for Multi-Tenancy:
+### 3. Contextual Discovery (Advanced)
+For more complex architectures (like Multi-Tenancy), the package allows you to silo resources into sub-contexts:
+
+*   **Contextual Migrations**: Place migrations in `Database/Migrations/Tenant` to load them only in specific database contexts.
+*   **Contextual Seeders**: Use subfolders like `Database/Seeders/Tenant/` and retrieve them using the `SeederPaths` helper:
 
 ```php
+use Victormgomes\ModulesPlus\Support\SeederPaths;
 use Victormgomes\ModulesPlus\Support\TenantSeeders;
 
-// Inside your main Tenant seeder:
-public function run(): void
-{
-    $this->call(TenantSeeders::getSeeders());
-}
+// Get seeders for any custom context
+$seeders = SeederPaths::get('MyContext');
+
+// Or use the built-in Tenant helper
+$seeders = TenantSeeders::getSeeders();
+
+$this->call($seeders);
 ```
 
 ---
