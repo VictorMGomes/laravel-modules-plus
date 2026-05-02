@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-modules-plus` will be documented in this file.
 
+## v0.0.9 - 2026-05-02
+
+**Full Changelog**: https://github.com/VictorMGomes/laravel-modules-plus/compare/v0.0.8...v0.0.9
+
 ## v0.0.8 - 2026-05-02
 
 **Full Changelog**: https://github.com/VictorMGomes/laravel-modules-plus/compare/v0.0.7...v0.0.8
