@@ -21,6 +21,7 @@
 *   **Zero-Config Discovery**: Automatic registration of Routes, Policies, Observers, and Events based on simple folder conventions.
 *   **Agnostic Factory Resolution**: Automatically resolves Eloquent factories for modular models. Keep your models clean and free of package-specific traits.
 *   **Dynamic Seeding**: Effortlessly manage data population with helpers that discover seeders across your entire modular ecosystem.
+*   **Full Command Integration**: All original `nWidart/laravel-modules` commands are fully supported and aware of the Environment Control patch.
 *   **Contextual Flexibility**: Optionally separate resources (Migrations, Seeders) into specific contexts like `Tenant` or `Central` for complex architectures.
 
 ---
@@ -64,15 +65,24 @@ Manage module activation directly via your `.env` file, keeping your `modules_st
 APP_MODULES_ENABLED=Auth,User,Chat,Billing
 ```
 
+All standard commands (e.g., `php artisan module:list`, `module:migrate`) will respect this setting automatically. Commands like `php artisan module:enable {name}` will now update your `.env` file directly.
+
 ### 2. Standard Plug-and-Play Structure
-By extending `AbstractModuleServiceProvider`, the following resources are discovered and registered automatically (based on standard `nWidart/laravel-modules` conventions):
+By extending `AbstractModuleServiceProvider`, the following resources are discovered and registered automatically (respecting any custom paths defined in your `modules.php` configuration):
 
 *   **Routes**: `routes/api.php` and `routes/web.php` are loaded with standard middleware.
+*   **Config**: Automatically merges `{module}/config/{module}.php` into the global configuration.
+*   **Views**: Loads views from `resources/views/` using the `{module}::` namespace.
+*   **Translations**: Loads lang files from `resources/lang/` (including JSON).
+*   **Migrations**: All migrations in `database/migrations/` are loaded by default.
+*   **Factories**: Factories in `database/factories/` are automatically resolved for modular models.
+*   **Seeders**: All seeders in `database/seeders/` can be dynamically retrieved for seeding.
 *   **Policies**: `app/Policies/UserPolicy.php` is automatically linked to `app/Models/User.php`.
 *   **Observers**: `app/Observers/UserObserver.php` is automatically linked to `app/Models/User.php`.
-*   **Factories**: Factories in `database/factories/` are automatically resolved for modular models using standard `HasFactory`.
-*   **Migrations**: All migrations in `database/migrations/` are loaded by default.
-*   **Seeders**: All seeders in `database/seeders/` can be dynamically retrieved for seeding.
+*   **Events/Listeners**: Automatically discovers listeners in the `app/Listeners/` directory.
+*   **Console Commands**: Automatically registers all commands in `app/Console/Commands/`.
+*   **View Components**: Registers components in `app/View/Components/`.
+*   **Livewire**: Automatically registers components in the `Livewire/` directory.
 
 ### 3. Contextual Discovery (Advanced)
 For more complex architectures (like Multi-Tenancy), the package allows you to silo resources into sub-contexts:
@@ -92,6 +102,15 @@ $seeders = TenantSeeders::getSeeders();
 
 $this->call($seeders);
 ```
+
+---
+
+## Configuration
+
+After publishing the configuration via `php artisan modules-plus:install`, you can customize the following in `config/modules-plus.php`:
+
+*   **`custom_stubs`**: When enabled, the package uses internal optimized stubs that follow the `AbstractModuleServiceProvider` pattern.
+*   **`paths`**: Define additional folder conventions for resource discovery that are not present in the default `nWidart/laravel-modules` configuration.
 
 ---
 
