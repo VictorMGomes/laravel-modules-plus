@@ -55,7 +55,7 @@ class ModularPath
 
         // Simple namespace resolution for custom paths if not using nwidart generator logic
         $path = is_array($config) ? ($config['path'] ?? '') : $config;
-        
+
         return (string) Str::of($path)
             ->replace(['/', '\\'], '\\')
             ->trim('\\')

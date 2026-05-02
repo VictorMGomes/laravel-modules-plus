@@ -6,9 +6,11 @@ namespace Victormgomes\ModulesPlus;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use Nwidart\Modules\Support\Stub;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Victormgomes\ModulesPlus\Commands\InstallCommand;
+use Victormgomes\ModulesPlus\Support\ModularPath;
 
 class ModulesPlusServiceProvider extends PackageServiceProvider
 {
@@ -46,7 +48,7 @@ class ModulesPlusServiceProvider extends PackageServiceProvider
                 $module = Str::after($modelName, 'Modules\\');
                 $module = Str::before($module, '\\Models\\');
 
-                $factoryNamespace = \Victormgomes\ModulesPlus\Support\ModularPath::getNamespace('factory');
+                $factoryNamespace = ModularPath::getNamespace('factory');
 
                 return "Modules\\{$module}\\{$factoryNamespace}\\".class_basename($modelName).'Factory';
             }
@@ -61,8 +63,8 @@ class ModulesPlusServiceProvider extends PackageServiceProvider
 
         // Only override if the user hasn't published the stubs to the root folder
         if (! is_dir($projectStubsPath)) {
-            if (class_exists(\Nwidart\Modules\Support\Stub::class)) {
-                \Nwidart\Modules\Support\Stub::setBasePath(__DIR__.'/../stubs/nwidart-stubs');
+            if (class_exists(Stub::class)) {
+                Stub::setBasePath(__DIR__.'/../stubs/nwidart-stubs');
             }
         }
     }

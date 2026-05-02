@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Livewire\Livewire;
 use ReflectionClass;
 use RuntimeException;
 use SplFileInfo;
@@ -115,7 +116,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
             $modelName = Str::replaceLast('AccessPolicy', '', $modelName);
             $modelName = Str::replaceLast('Policy', '', $modelName);
 
-            $modelClass = "{$this->moduleNamespace}\\" . ModularPath::getNamespace('model') . "\\{$modelName}";
+            $modelClass = "{$this->moduleNamespace}\\".ModularPath::getNamespace('model')."\\{$modelName}";
 
             if (class_exists($modelClass) && class_exists($policyClass)) {
                 Gate::policy($modelClass, $policyClass);
@@ -165,7 +166,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
                 }
             }
 
-            $modelClass = "{$this->moduleNamespace}\\" . ModularPath::getNamespace('model') . "\\{$modelName}";
+            $modelClass = "{$this->moduleNamespace}\\".ModularPath::getNamespace('model')."\\{$modelName}";
 
             if (class_exists($modelClass) && class_exists($observerClass)) {
                 $modelClass::observe($observerClass);
@@ -258,7 +259,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
 
     protected function bootComponents(): void
     {
-        $namespace = "{$this->moduleNamespace}\\" . ModularPath::getNamespace('component-class');
+        $namespace = "{$this->moduleNamespace}\\".ModularPath::getNamespace('component-class');
         Blade::componentNamespace($namespace, strtolower($this->moduleName));
     }
 
@@ -266,7 +267,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
     {
         $maps = $this->morphMaps;
 
-        $modelClass = "{$this->moduleNamespace}\\" . ModularPath::getNamespace('model') . "\\{$this->moduleName}";
+        $modelClass = "{$this->moduleNamespace}\\".ModularPath::getNamespace('model')."\\{$this->moduleName}";
         if (class_exists($modelClass)) {
             $maps[strtolower($this->moduleName)] = $modelClass;
         }
@@ -296,7 +297,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
 
     protected function bootLivewire(): void
     {
-        if (! class_exists(\Livewire\Livewire::class)) {
+        if (! class_exists(Livewire::class)) {
             return;
         }
 
@@ -310,7 +311,7 @@ abstract class AbstractModuleServiceProvider extends ServiceProvider
             $class = $this->getClassFromFile($file);
             if ($class && ! (new ReflectionClass($class))->isAbstract()) {
                 $alias = $prefix.'::'.Str::kebab(class_basename($class));
-                \Livewire\Livewire::component($alias, $class);
+                Livewire::component($alias, $class);
             }
         }
     }
