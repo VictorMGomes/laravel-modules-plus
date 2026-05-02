@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Victormgomes\ModulesPlus;
 
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Victormgomes\ModulesPlus\Commands\InstallCommand;
@@ -25,6 +27,8 @@ class ModulesPlusServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
+        $this->registerFactoryResolver();
+
         if (config('modules-plus.custom_stubs')) {
             $this->overrideStubPath();
         }
@@ -33,6 +37,20 @@ class ModulesPlusServiceProvider extends PackageServiceProvider
         $this->publishes([
             __DIR__.'/../stubs/nwidart-stubs' => base_path('stubs/nwidart-stubs'),
         ], 'modules-plus-stubs');
+    }
+
+    protected function registerFactoryResolver(): void
+    {
+        Factory::guessFactoryNamesUsing(function (string $modelName) {
+            if (Str::startsWith($modelName, 'Modules\\')) {
+                $module = Str::after($modelName, 'Modules\\');
+                $module = Str::before($module, '\\Models\\');
+
+                return "Modules\\{$module}\\Database\\Factories\\".class_basename($modelName).'Factory';
+            }
+
+            return 'Database\\Factories\\'.class_basename($modelName).'Factory';
+        });
     }
 
     protected function overrideStubPath(): void

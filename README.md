@@ -63,12 +63,27 @@ APP_MODULES_ENABLED=Auth,User,Chat,Billing
 ```
 
 ### 2. Creating New Modules
-The generated Service Provider will extend `AbstractModuleServiceProvider`. This parent class handles all registration automatically as long as you follow the standard folder structure:
+The generated Service Provider will extend `AbstractModuleServiceProvider`. This parent class provides the **Plug-and-Play** engine that handles all registration automatically as long as you follow the standard folder structure:
 
 *   `Routes/api.php`, `Routes/web.php` -> Loaded automatically.
 *   `Policies/` -> `UserPolicy` automatically linked to `Models/User`.
 *   `Observers/` -> `UserObserver` automatically linked to `Models/User`.
+*   `Database/Factories/` -> Automatically resolved for models in the `Models/` namespace.
 *   `Database/Migrations/Tenant` -> Automatically loaded only for tenant database contexts.
+*   `Database/Seeders/Tenant/` -> Can be dynamically loaded using provided helpers.
+
+### 3. Modular Seeding
+The package provides helpers to easily run seeders that are siloed within module subfolders, which is especially useful for Multi-Tenancy:
+
+```php
+use Victormgomes\ModulesPlus\Support\TenantSeeders;
+
+// Inside your main Tenant seeder:
+public function run(): void
+{
+    $this->call(TenantSeeders::getSeeders());
+}
+```
 
 ---
 
